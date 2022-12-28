@@ -4,12 +4,11 @@ library(rgl)
 # This is to output a rgl plot in a rmarkdown document.
 setupKnitr()
 
-data = read.csv("C:/GitHub/OMP/data/cluster_output_8_threads_dataset.txt", 
-  header = FALSE, sep = " ")
+data = read.csv("C:/GitHub/OMP/data/cluster_output_8_threads_dataset.txt", header = FALSE, sep = " ")
 
 # Add a new column with color
-mycolors <- c('royalblue1', 'darkcyan', 'oldlace', 'purple')
-data$color <- mycolors[ as.numeric(data$V4) ]
+mycolors <- c('royalblue1', 'darkcyan', 'purple', 'yellow')
+data$color <- mycolors[ as.numeric(data$V4+1) ]
 
 # Plot
 plot3d( 
