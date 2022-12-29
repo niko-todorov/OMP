@@ -32,7 +32,7 @@ void kmeans_serial_run()
     // Cluster location or centroid (x,y,z) coordinates for K clusters in a iteration
     float* cluster_points_sum = (float*)malloc(K_global * 3 * sizeof(float));
 
-    // No. of points in a cluster for a iteration
+    // #points in a cluster for a iteration
     int* points_inside_cluster_count = (int*)malloc(K_global * sizeof(int));
 
     // Start of loop
@@ -111,6 +111,7 @@ void kmeans_serial_run()
         delta_global = temp_delta;
 
         iter_counter++;
+        printf("#%d delta %12.10f\n", iter_counter, delta_global);
     }
 
     // Store the number of iterations performed in global variable
@@ -125,8 +126,7 @@ void kmeans_serial_run()
         data_point_cluster_global[i * 4 + 2] = data_points_global[i * 3 + 2];
         data_point_cluster_global[i * 4 + 3] = point_to_cluster_id[i];
     }
-    //printf("k-means serial end\n");
-}
+} // kmeans_serial_run
 
 void kmeans_ser(
     int N,
@@ -206,8 +206,10 @@ void clusters_out(const char* cluster_filename, int N, int* cluster_points)
     for (i = 0; i < N; i++)
     {
         fprintf(fout, "%d %d %d %d\n",
-            *(cluster_points + (i * 4)), *(cluster_points + (i * 4) + 1),
-            *(cluster_points + (i * 4) + 2), *(cluster_points + (i * 4) + 3));
+            *(cluster_points + (i * 4)), 
+            *(cluster_points + (i * 4) + 1),
+            *(cluster_points + (i * 4) + 2), 
+            *(cluster_points + (i * 4) + 3));
     }
     fclose(fout);
 }
@@ -243,10 +245,10 @@ int main()
     int num_iterations;     //Number of iterations performed by algo (to do)
     //---------------------------------------------------------------------
 
-    char* dataset_filename = "data\\dataset-10000.txt";
+    char* dataset_filename = "data\\dataset-1000000.txt";
     int _procs = omp_get_num_procs(); 
-    printf("No. of Processors available: %d\n", _procs);
-    printf("Enter No. of Clusters: ");
+    printf("#Processors available: %d\n", _procs);
+    printf("Enter #Clusters: ");
     scanf("%d", &K);
 
     double start_time, end_time;

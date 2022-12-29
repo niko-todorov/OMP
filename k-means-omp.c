@@ -49,7 +49,7 @@ void kmeans_openmp_run(int* tid)
     // Cluster location or centroid (x,y,z) coordinates for K clusters in a iteration
     float* cluster_points_sum = (float*)malloc(K_global * 3 * sizeof(float));
 
-    // No. of points in a cluster for a iteration
+    // #points in a cluster for a iteration
     int* points_inside_cluster_count = (int*)malloc(K_global * sizeof(int));
 
     // Start of loop
@@ -133,6 +133,7 @@ void kmeans_openmp_run(int* tid)
             delta_global = temp_delta;
             number_of_iterations_global++;
         }
+        if (*tid == 0) printf("#%d delta %12.10f\n", number_of_iterations_global, delta_global);
 
         // Wait for all threads to arrive and update the iter_counter by +1
 #pragma omp barrier
@@ -148,8 +149,7 @@ void kmeans_openmp_run(int* tid)
         data_point_cluster_global[i * 4 + 2] = data_points_global[i * 3 + 2];
         data_point_cluster_global[i * 4 + 3] = point_to_cluster_id[i - start];
     }
-    //printf("k-means openmp end\n");
-}
+} // kmeans_openmp_run
 
 void kmeans_omp(int num_threads,
     int N,
@@ -206,7 +206,7 @@ void kmeans_omp(int num_threads,
 #pragma omp parallel
     {
         int ID = omp_get_thread_num();
-        printf("Thread: %d created!\n", ID);
+        //printf("Thread: %d created!\n", ID);
         kmeans_openmp_run(&ID);
     }
 
@@ -249,8 +249,10 @@ void clusters_out(const char* cluster_filename, int N, int* cluster_points)
     for (i = 0; i < N; i++)
     {
         fprintf(fout, "%d %d %d %d\n",
-            *(cluster_points + (i * 4)), *(cluster_points + (i * 4) + 1),
-            *(cluster_points + (i * 4) + 2), *(cluster_points + (i * 4) + 3));
+            *(cluster_points + (i * 4)), 
+            *(cluster_points + (i * 4) + 1),
+            *(cluster_points + (i * 4) + 2), 
+            *(cluster_points + (i * 4) + 3));
     }
     fclose(fout);
 }
@@ -287,12 +289,12 @@ int main()
     int num_iterations;     //Number of iterations performed by algo (to do)
     //---------------------------------------------------------------------
 
-    char* dataset_filename = "data\\dataset-10000.txt";
+    char* dataset_filename = "data\\dataset-1000000.txt";
     int _procs = omp_get_num_procs(); 
-    printf("No. of Processors available: %d\n", _procs);
-    printf("Enter No. of Threads: ");
+    printf("#Processors available: %d\n", _procs);
+    printf("Enter #Threads: ");
     scanf("%d", &num_threads);
-    printf("Enter No. of Clusters: ");
+    printf("Enter #Clusters: ");
     scanf("%d", &K);
 
     double start_time, end_time;
