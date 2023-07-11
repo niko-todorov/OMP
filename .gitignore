@@ -13,3 +13,9 @@
 /x64/Release
 /debug.log
 /GPUCache
+.Rproj.user
+*.exe
+*.bak
+*.pdb
+.RData
+.Rhistory
